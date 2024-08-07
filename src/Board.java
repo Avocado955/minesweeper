@@ -64,4 +64,12 @@ public class Board {
       System.out.println();
     }
   }
+
+  // Have a system for reveal, have it check if space is already revealed
+  // Have it check if it is a bomb -- This should be done elsewhere before
+  // checking reveal.
+  // Then reveal this space
+  // if this space is not 0, return
+  // if it is 0 meaning its a blank space, call reveal on each of the 8
+  // surrounding
 }
