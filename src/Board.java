@@ -22,6 +22,7 @@ public class Board {
   // Want the board to be customisable
   private int xySize;
   private int[][] board;
+  private boolean[][] revealed; // Using this to check if a board square has been revealed
   private int numOfMines;
 
   public Board() {
@@ -46,6 +47,8 @@ public class Board {
 
   private String getSpaceValue(int x, int y) {
     switch (this.board[x][y]) {
+      case 0:
+        return " ";
       case -1:
         return "B";
       case 9:
@@ -55,8 +58,19 @@ public class Board {
     }
   }
 
+  private String getBoardLetter(int x) {
+    String letter = Character.toString(65 + x);
+    return letter;
+  }
+
   public void printBoard() {
+    System.out.printf(" X/Y");
+    for (int a = 0; a < xySize; a++) {
+      System.out.printf("  %d  ", a);
+    }
+    System.out.println();
     for (int x = 0; x < xySize; x++) {
+      System.out.printf(" %s: ", getBoardLetter(x));
       for (int y = 0; y < xySize; y++) {
         // System.out.println(getSpaceValue(x, y));
         System.out.printf("[ %s ]", getSpaceValue(x, y));
