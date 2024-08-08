@@ -3,5 +3,7 @@ public class App {
         System.out.println("Hello, World!");
         Board board = new Board(10);
         board.printBoard();
+        PlayerActions player = new PlayerActions();
+        player.getPlayerInput(10);
     }
 }

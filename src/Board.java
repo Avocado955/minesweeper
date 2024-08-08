@@ -31,7 +31,11 @@ public class Board {
     this.board = new int[10][10];
   }
 
+  // Currently max board size = 10
   public Board(int num) {
+    if (num > 10) {
+      num = 10;
+    }
     this.xySize = num;
     this.numOfMines = num;
     this.board = new int[num][num];
@@ -77,6 +81,31 @@ public class Board {
       }
       System.out.println();
     }
+  }
+
+  public void placeBomb(int x, int y) {
+    this.board[x][y] = -1;
+    updateAllSurroundingBomb(x, y);
+  }
+
+  public boolean checkSpaceForBomb(int x, int y) {
+    if (this.board[x][y] == -1) {
+      return true;
+    }
+    return false;
+  }
+
+  private void updateAllSurroundingBomb(int x, int y) {
+    this.board[x][y - 1] += 1; // Left of Bomb
+    this.board[x][y + 1] += 1; // Right of Bomb
+
+    this.board[x - 1][y - 1] += 1; // Diagonal Left Above of Bomb
+    this.board[x - 1][y] += 1; // Above Bomb
+    this.board[x - 1][y + 1] += 1; // Diagonal Right Above of Bomb
+
+    this.board[x + 1][y - 1] += 1; // Diagonal Left Below of Bomb
+    this.board[x + 1][y] += 1; // Below Bomb
+    this.board[x + 1][y + 1] += 1; // Diagonal Right Below of Bomb
   }
 
   // Have a system for reveal, have it check if space is already revealed
