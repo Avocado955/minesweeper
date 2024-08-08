@@ -9,11 +9,15 @@ public class PlayerActions {
 
   }
 
-  public void getPlayerInput(int xySize) {
-    System.out.println(checkValidInput(xySize, "A11"));
-    checkValidInput(xySize, "A4");
+  public String getPlayerInput() {
+    this.scanner = new Scanner(System.in);
+    String userInput = this.scanner.next();
+    return userInput;
   }
 
+  // Should change this to checking if the ints are between the max int
+  // Should pull apart the input outside this
+  // As need it pulled apart outside
   private boolean checkValidInput(int xySize, String input) {
     // Currently anything higher then 9 as a second parameter will just be cut down
     // to the first digit so A10 will just check A1

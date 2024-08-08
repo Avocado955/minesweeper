@@ -119,14 +119,14 @@ public class Board {
           this.board[x - 1][y - 1] += 1; // Diagonal Left Above of Bomb
         }
       }
-      if (x + 1 <= this.xySize) {
+      if (x + 1 < this.xySize) {
         if (!checkSpaceForBomb(x + 1, y - 1)) {
           this.board[x + 1][y - 1] += 1; // Diagonal Left Below of Bomb
         }
       }
     }
 
-    if (y + 1 <= this.xySize) {
+    if (y + 1 < this.xySize) {
       if (!checkSpaceForBomb(x, y + 1)) {
         this.board[x][y + 1] += 1; // Right of Bomb
       }
@@ -136,7 +136,7 @@ public class Board {
         }
 
       }
-      if (x + 1 <= this.xySize) {
+      if (x + 1 < this.xySize) {
         if (!checkSpaceForBomb(x + 1, y + 1)) {
           this.board[x + 1][y + 1] += 1; // Diagonal Right Below of Bomb
         }
@@ -149,7 +149,7 @@ public class Board {
       }
     }
 
-    if (x + 1 <= this.xySize) {
+    if (x + 1 < this.xySize) {
       if (!checkSpaceForBomb(x + 1, y)) {
         this.board[x + 1][y] += 1; // Below Bomb
       }
