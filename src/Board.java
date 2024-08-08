@@ -30,6 +30,7 @@ public class Board {
     this.xySize = 10;
     this.numOfMines = 10;
     this.board = new int[10][10];
+    this.revealed = new boolean[10][10];
   }
 
   // Currently min board size = 2
@@ -45,6 +46,7 @@ public class Board {
     this.xySize = num;
     this.numOfMines = num;
     this.board = new int[num][num];
+    this.revealed = new boolean[num][num];
   }
 
   // _____________
@@ -57,8 +59,6 @@ public class Board {
 
   private String getSpaceValue(int x, int y) {
     switch (this.board[x][y]) {
-      case 0:
-        return " ";
       case -1:
         return "B";
       case 9:
@@ -83,6 +83,9 @@ public class Board {
       System.out.printf(" %s: ", getBoardLetter(x));
       for (int y = 0; y < xySize; y++) {
         // System.out.println(getSpaceValue(x, y));
+        // if (!revealed[x][y]) {
+        // System.out.printf("[ ]");
+        // }
         System.out.printf("[ %s ]", getSpaceValue(x, y));
       }
       System.out.println();
@@ -131,17 +134,24 @@ public class Board {
         if (!checkSpaceForBomb(x - 1, y + 1)) {
           this.board[x - 1][y + 1] += 1; // Diagonal Right Above of Bomb
         }
-        if (!checkSpaceForBomb(x - 1, y)) {
-          this.board[x - 1][y] += 1; // Above Bomb
-        }
+
       }
       if (x + 1 <= this.xySize) {
         if (!checkSpaceForBomb(x + 1, y + 1)) {
           this.board[x + 1][y + 1] += 1; // Diagonal Right Below of Bomb
         }
-        if (!checkSpaceForBomb(x + 1, y)) {
-          this.board[x + 1][y] += 1; // Below Bomb
-        }
+      }
+    }
+
+    if (x - 1 >= 0) {
+      if (!checkSpaceForBomb(x - 1, y)) {
+        this.board[x - 1][y] += 1; // Above Bomb
+      }
+    }
+
+    if (x + 1 <= this.xySize) {
+      if (!checkSpaceForBomb(x + 1, y)) {
+        this.board[x + 1][y] += 1; // Below Bomb
       }
     }
 
@@ -154,4 +164,13 @@ public class Board {
   // if this space is not 0, return
   // if it is 0 meaning its a blank space, call reveal on each of the 8
   // surrounding
+
+  // Getters
+  public int getXySize() {
+    return this.xySize;
+  }
+
+  public int getNumOfMines() {
+    return this.numOfMines;
+  }
 }
