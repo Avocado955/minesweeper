@@ -1,3 +1,4 @@
+
 public class Board {
   // Use a int[][] for the board data
   // -1 = bomb, 0 = empty
@@ -31,8 +32,13 @@ public class Board {
     this.board = new int[10][10];
   }
 
+  // Currently min board size = 2
   // Currently max board size = 10
   public Board(int num) {
+    // Should move these 2 checks out to the setup
+    if (num < 2) {
+      num = 2;
+    }
     if (num > 10) {
       num = 10;
     }
@@ -96,16 +102,49 @@ public class Board {
   }
 
   private void updateAllSurroundingBomb(int x, int y) {
-    this.board[x][y - 1] += 1; // Left of Bomb
-    this.board[x][y + 1] += 1; // Right of Bomb
+    // need to check that the cell is not a bomb
+    // need to check if its in range of the board
 
-    this.board[x - 1][y - 1] += 1; // Diagonal Left Above of Bomb
-    this.board[x - 1][y] += 1; // Above Bomb
-    this.board[x - 1][y + 1] += 1; // Diagonal Right Above of Bomb
+    // For now write an if statement for each, and think about a way to streamline
+    // it
+    if (y - 1 >= 0) {
+      if (!checkSpaceForBomb(x, y - 1)) {
+        this.board[x][y - 1] += 1; // Left of Bomb
+      }
+      if (x - 1 >= 0) {
+        if (!checkSpaceForBomb(x - 1, y - 1)) {
+          this.board[x - 1][y - 1] += 1; // Diagonal Left Above of Bomb
+        }
+      }
+      if (x + 1 <= this.xySize) {
+        if (!checkSpaceForBomb(x + 1, y - 1)) {
+          this.board[x + 1][y - 1] += 1; // Diagonal Left Below of Bomb
+        }
+      }
+    }
 
-    this.board[x + 1][y - 1] += 1; // Diagonal Left Below of Bomb
-    this.board[x + 1][y] += 1; // Below Bomb
-    this.board[x + 1][y + 1] += 1; // Diagonal Right Below of Bomb
+    if (y + 1 <= this.xySize) {
+      if (!checkSpaceForBomb(x, y + 1)) {
+        this.board[x][y + 1] += 1; // Right of Bomb
+      }
+      if (x - 1 >= 0) {
+        if (!checkSpaceForBomb(x - 1, y + 1)) {
+          this.board[x - 1][y + 1] += 1; // Diagonal Right Above of Bomb
+        }
+        if (!checkSpaceForBomb(x - 1, y)) {
+          this.board[x - 1][y] += 1; // Above Bomb
+        }
+      }
+      if (x + 1 <= this.xySize) {
+        if (!checkSpaceForBomb(x + 1, y + 1)) {
+          this.board[x + 1][y + 1] += 1; // Diagonal Right Below of Bomb
+        }
+        if (!checkSpaceForBomb(x + 1, y)) {
+          this.board[x + 1][y] += 1; // Below Bomb
+        }
+      }
+    }
+
   }
 
   // Have a system for reveal, have it check if space is already revealed
