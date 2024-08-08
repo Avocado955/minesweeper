@@ -61,8 +61,8 @@ public class Board {
     switch (this.board[x][y]) {
       case -1:
         return "B";
-      case 9:
-        return "F";
+      // case 9:
+      // return "F";
       default:
         return "" + this.board[x][y];
     }
@@ -83,10 +83,11 @@ public class Board {
       System.out.printf(" %s: ", getBoardLetter(x));
       for (int y = 0; y < xySize; y++) {
         // System.out.println(getSpaceValue(x, y));
-        // if (!revealed[x][y]) {
-        // System.out.printf("[ ]");
-        // }
-        System.out.printf("[ %s ]", getSpaceValue(x, y));
+        if (!revealed[x][y]) {
+          System.out.printf("[   ]");
+        } else {
+          System.out.printf("[ %s ]", getSpaceValue(x, y));
+        }
       }
       System.out.println();
     }
@@ -157,6 +158,16 @@ public class Board {
 
   }
 
+  public boolean checkInput(int x, int y) {
+    boolean bombCheck = checkSpaceForBomb(x, y);
+    if (bombCheck) {
+      this.revealed[x][y] = true;
+      return true;
+    }
+    reveal(x, y);
+    return false;
+  }
+
   // Have a system for reveal, have it check if space is already revealed
   // Have it check if it is a bomb -- This should be done elsewhere before
   // checking reveal.
@@ -164,6 +175,43 @@ public class Board {
   // if this space is not 0, return
   // if it is 0 meaning its a blank space, call reveal on each of the 8
   // surrounding
+
+  public void reveal(int x, int y) {
+    if (this.revealed[x][y]) {
+      return;
+    }
+    revealed[x][y] = true;
+    if (this.board[x][y] != 0) {
+      return;
+    }
+    if (y - 1 >= 0) {
+      reveal(x, y - 1); // Left of Bomb
+      if (x - 1 >= 0) {
+        reveal(x - 1, y - 1); // Diagonal Left Above of Bomb
+      }
+      if (x + 1 < this.xySize) {
+        reveal(x + 1, y - 1); // Diagonal Left Below of Bomb
+      }
+    }
+
+    if (y + 1 < this.xySize) {
+      reveal(x, y + 1); // Right of Bomb
+      if (x - 1 >= 0) {
+        reveal(x - 1, y + 1); // Diagonal Right Above of Bomb
+      }
+      if (x + 1 < this.xySize) {
+        reveal(x + 1, y + 1); // Diagonal Right Below of Bomb
+      }
+    }
+
+    if (x - 1 >= 0) {
+      reveal(x - 1, y); // Above Bomb
+    }
+
+    if (x + 1 < this.xySize) {
+      reveal(x + 1, y); // Below Bomb
+    }
+  }
 
   // Getters
   public int getXySize() {

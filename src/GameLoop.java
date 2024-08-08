@@ -3,8 +3,8 @@ import java.util.List;
 import java.util.Set;
 
 public class GameLoop {
-  private boolean hasEnded = false;
-  private boolean playerWon = false;
+  public boolean hasEnded = false;
+  public boolean playerWon = false;
   private int xySize = 0;
 
   private Board gameBoard;
@@ -16,7 +16,7 @@ public class GameLoop {
 
   public void loop() {
     setUp();
-
+    gamePlayLoop();
   }
 
   // Setup doesnt need to be its own class as then would need to pass in the Board
@@ -48,6 +48,8 @@ public class GameLoop {
       int randomXNum = (int) (Math.random() * this.xySize);
       int randomYNum = (int) (Math.random() * this.xySize);
       System.out.printf("X: %d, Y: %d\n", randomXNum, randomYNum);
+      // Need a different method of storing the values, as 0, 3 is the same as 1, 0
+      // As 0 * 3 = 0, and 1 * 0 = 0
       if (!selectedMines.contains(randomXNum * randomYNum)) {
         selectedMines.add(randomXNum * randomYNum);
         gameBoard.placeBomb(randomXNum, randomYNum);
@@ -59,11 +61,29 @@ public class GameLoop {
   }
 
   public void gamePlayLoop() {
-    gameBoard.printBoard();
-    System.out.println("Choose A Space to reveal!");
-    System.out.println("Enter the letter then number (Eg. A4)");
-    String input = player.getPlayerInput();
+    while (!hasEnded) {
 
+      gameBoard.printBoard();
+      System.out.println("Choose A Space to reveal!");
+      System.out.println("Enter the letter then number (Eg. A4)");
+      String input = player.getPlayerInput();
+      // Pull apart the input and store the first 2 characters
+      int stringCharNum = input.substring(0, 1).toUpperCase().codePointAt(0) - 65;
+      int stringNumber = Integer.parseInt(input.substring(1, 2));
+      System.out.printf("X: %d, Y: %d\n", stringCharNum, stringNumber);
+
+      boolean checkSpace = gameBoard.checkInput(stringCharNum, stringNumber);
+      // If this is true, then they blew up a bomb
+      if (checkSpace) {
+        hasEnded = true;
+        playerWon = false;
+        System.out.println();
+        gameBoard.printBoard();
+        System.out.println();
+        System.out.println("BOOM!");
+        System.out.println("You hit a bomb! Better luck next time!");
+      }
+    }
   }
 
 }
