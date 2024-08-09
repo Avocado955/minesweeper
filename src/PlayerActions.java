@@ -12,6 +12,7 @@ public class PlayerActions {
   public String getPlayerInput() {
     this.scanner = new Scanner(System.in);
     String userInput = this.scanner.next();
+    this.scanner.close();
     return userInput;
   }
 

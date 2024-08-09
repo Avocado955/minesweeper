@@ -1,31 +1,15 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Board {
-  // Use a int[][] for the board data
-  // -1 = bomb, 0 = empty
-  // 1, 2, 3, 4, 5, 6, 7, 8 = number of bombs in adjoining tiles
-  // flag should be 9
-  // Need a function to check surrounding board items
-
-  // 4x x 4y
-  // y
-  // x 0 1 2 3
-  // 4 5 6 7
-  // 8 9 10 11
-  // 12 13 14 15
-
-  // x * num + y
-  // 2 * 4 + 1 = 9
-  // 0x,0y 0x,1y 0x,2y 0x,3y
-  // 1x,0y 1x,1y 1x,2y 1x,3y
-  // 2x,0y 2x,1y 2x,2y 2x,3y
-  // 3x,0y 3x,1y 3x,2y 3x,3y
-
   // Want the board to be customisable
   private int xySize;
   private int[][] board;
   private boolean[][] revealed; // Using this to check if a board square has been revealed
   private int numOfMines;
 
+  // -----Constructors-----
   public Board() {
     this.xySize = 10;
     this.numOfMines = 10;
@@ -36,7 +20,7 @@ public class Board {
   // Currently min board size = 2
   // Currently max board size = 10
   public Board(int num) {
-    // Should move these 2 checks out to the setup
+    // Leaving this in just in case an edge case slips through
     if (num < 2) {
       num = 2;
     }
@@ -49,13 +33,7 @@ public class Board {
     this.revealed = new boolean[num][num];
   }
 
-  // _____________
-  // [ ] | | |
-  // [ ] | |
-  // [ ][ ][ ][ ]
-  // [ ][ ][ ][ ]
-  // ￣ ￣ ￣ ￣ ￣ ￣ ￣
-  // ---------- (U+FFE3)
+  // -----Private Methods-----
 
   private String getSpaceValue(int x, int y) {
     switch (this.board[x][y]) {
@@ -72,6 +50,70 @@ public class Board {
     String letter = Character.toString(65 + x);
     return letter;
   }
+
+  private List<GridPos> getAllValidGridPosAroundGridPos(int x, int y) {
+    List<GridPos> allGridPositions = new ArrayList<>();
+    int a = 0;
+    int b = -1;
+    for (int z = 0; z < 8; z++) {
+      if (z == 1) {
+        b += 1;
+      }
+      if (z == 2) {
+        a = -1;
+        b = -1;
+      }
+      if (z == 5) {
+        a = 1;
+        b = -1;
+      }
+      GridPos newPos = new GridPos(x + a, y + b);
+      allGridPositions.add(newPos);
+      b += 1;
+    }
+
+    List<GridPos> validGridPos = allGridPositions.stream().filter((pos) -> {
+      if (pos.getX() < 0 || pos.getX() >= this.xySize) {
+        return false;
+      }
+      if (pos.getY() < 0 || pos.getY() >= this.xySize) {
+        return false;
+      }
+      return true;
+    }).collect(Collectors.toList());
+
+    return validGridPos;
+  }
+
+  private void updateAllSurroundingBomb(int x, int y) {
+    // Refactor using GridPos list
+    // need to check if its in range of the board
+    // need to check that the cell is not a bomb
+    List<GridPos> validGridPositionsToCheck = getAllValidGridPosAroundGridPos(x, y);
+
+    for (GridPos gridPos : validGridPositionsToCheck) {
+      if (checkSpaceForBomb(gridPos.getX(), gridPos.getY())) {
+        continue;
+      }
+      this.board[gridPos.getX()][gridPos.getY()] += 1;
+    }
+  }
+
+  private void reveal(int x, int y) {
+    if (this.revealed[x][y]) {
+      return;
+    }
+    revealed[x][y] = true;
+    if (this.board[x][y] != 0) {
+      return;
+    }
+    List<GridPos> validGridPositionsToReveal = getAllValidGridPosAroundGridPos(x, y);
+    for (GridPos gridPos : validGridPositionsToReveal) {
+      reveal(gridPos.getX(), gridPos.getY());
+    }
+  }
+
+  // -----Public Methods-----
 
   public void printBoard() {
     System.out.printf(" X/Y");
@@ -104,59 +146,6 @@ public class Board {
     return false;
   }
 
-  private void updateAllSurroundingBomb(int x, int y) {
-    // need to check that the cell is not a bomb
-    // need to check if its in range of the board
-
-    // For now write an if statement for each, and think about a way to streamline
-    // it
-    if (y - 1 >= 0) {
-      if (!checkSpaceForBomb(x, y - 1)) {
-        this.board[x][y - 1] += 1; // Left of Bomb
-      }
-      if (x - 1 >= 0) {
-        if (!checkSpaceForBomb(x - 1, y - 1)) {
-          this.board[x - 1][y - 1] += 1; // Diagonal Left Above of Bomb
-        }
-      }
-      if (x + 1 < this.xySize) {
-        if (!checkSpaceForBomb(x + 1, y - 1)) {
-          this.board[x + 1][y - 1] += 1; // Diagonal Left Below of Bomb
-        }
-      }
-    }
-
-    if (y + 1 < this.xySize) {
-      if (!checkSpaceForBomb(x, y + 1)) {
-        this.board[x][y + 1] += 1; // Right of Bomb
-      }
-      if (x - 1 >= 0) {
-        if (!checkSpaceForBomb(x - 1, y + 1)) {
-          this.board[x - 1][y + 1] += 1; // Diagonal Right Above of Bomb
-        }
-
-      }
-      if (x + 1 < this.xySize) {
-        if (!checkSpaceForBomb(x + 1, y + 1)) {
-          this.board[x + 1][y + 1] += 1; // Diagonal Right Below of Bomb
-        }
-      }
-    }
-
-    if (x - 1 >= 0) {
-      if (!checkSpaceForBomb(x - 1, y)) {
-        this.board[x - 1][y] += 1; // Above Bomb
-      }
-    }
-
-    if (x + 1 < this.xySize) {
-      if (!checkSpaceForBomb(x + 1, y)) {
-        this.board[x + 1][y] += 1; // Below Bomb
-      }
-    }
-
-  }
-
   public boolean checkInput(int x, int y) {
     boolean bombCheck = checkSpaceForBomb(x, y);
     if (bombCheck) {
@@ -165,51 +154,6 @@ public class Board {
     }
     reveal(x, y);
     return false;
-  }
-
-  // Have a system for reveal, have it check if space is already revealed
-  // Have it check if it is a bomb -- This should be done elsewhere before
-  // checking reveal.
-  // Then reveal this space
-  // if this space is not 0, return
-  // if it is 0 meaning its a blank space, call reveal on each of the 8
-  // surrounding
-
-  public void reveal(int x, int y) {
-    if (this.revealed[x][y]) {
-      return;
-    }
-    revealed[x][y] = true;
-    if (this.board[x][y] != 0) {
-      return;
-    }
-    if (y - 1 >= 0) {
-      reveal(x, y - 1); // Left of Bomb
-      if (x - 1 >= 0) {
-        reveal(x - 1, y - 1); // Diagonal Left Above of Bomb
-      }
-      if (x + 1 < this.xySize) {
-        reveal(x + 1, y - 1); // Diagonal Left Below of Bomb
-      }
-    }
-
-    if (y + 1 < this.xySize) {
-      reveal(x, y + 1); // Right of Bomb
-      if (x - 1 >= 0) {
-        reveal(x - 1, y + 1); // Diagonal Right Above of Bomb
-      }
-      if (x + 1 < this.xySize) {
-        reveal(x + 1, y + 1); // Diagonal Right Below of Bomb
-      }
-    }
-
-    if (x - 1 >= 0) {
-      reveal(x - 1, y); // Above Bomb
-    }
-
-    if (x + 1 < this.xySize) {
-      reveal(x + 1, y); // Below Bomb
-    }
   }
 
   public boolean checkWin() {
@@ -221,13 +165,12 @@ public class Board {
         if (!revealed[x][y]) {
           return false;
         }
-
       }
     }
     return true;
   }
 
-  // Getters
+  // -----Getters-----
   public int getXySize() {
     return this.xySize;
   }

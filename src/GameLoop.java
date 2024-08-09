@@ -99,9 +99,9 @@ public class GameLoop {
       if (checkSpace) {
         hasEnded = true;
         playerWon = false;
-      } else {
+      } else { // If not then check if they have revealed all other squares
         boolean checkWin = gameBoard.checkWin();
-        if (checkWin) {
+        if (checkWin) { // If so, they have won and end the game
           playerWon = true;
           hasEnded = true;
         }
