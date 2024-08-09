@@ -3,26 +3,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Board {
-  // Use a int[][] for the board data
-  // -1 = bomb, 0 = empty
-  // 1, 2, 3, 4, 5, 6, 7, 8 = number of bombs in adjoining tiles
-  // flag should be 9
-  // Need a function to check surrounding board items
-
-  // 4x x 4y
-  // y
-  // x 0 1 2 3
-  // 4 5 6 7
-  // 8 9 10 11
-  // 12 13 14 15
-
-  // x * num + y
-  // 2 * 4 + 1 = 9
-  // 0x,0y 0x,1y 0x,2y 0x,3y
-  // 1x,0y 1x,1y 1x,2y 1x,3y
-  // 2x,0y 2x,1y 2x,2y 2x,3y
-  // 3x,0y 3x,1y 3x,2y 3x,3y
-
   // Want the board to be customisable
   private int xySize;
   private int[][] board;
@@ -40,7 +20,7 @@ public class Board {
   // Currently min board size = 2
   // Currently max board size = 10
   public Board(int num) {
-    // Should move these 2 checks out to the setup
+    // Leaving this in just in case an edge case slips through
     if (num < 2) {
       num = 2;
     }
@@ -71,12 +51,11 @@ public class Board {
     return letter;
   }
 
-  private List<GridPos> getAllSafeGridPosAroundGridPos(int x, int y) {
+  private List<GridPos> getAllValidGridPosAroundGridPos(int x, int y) {
     List<GridPos> allGridPositions = new ArrayList<>();
     int a = 0;
     int b = -1;
     for (int z = 0; z < 8; z++) {
-      // System.out.printf("X: %d, A: %d, Y: %d, B: %d\n", x, a, y, b);
       if (z == 1) {
         b += 1;
       }
@@ -92,9 +71,7 @@ public class Board {
       allGridPositions.add(newPos);
       b += 1;
     }
-    System.out.println("All values");
-    System.out.println(allGridPositions.toString());
-    System.out.println();
+
     List<GridPos> validGridPos = allGridPositions.stream().filter((pos) -> {
       if (pos.getX() < 0 || pos.getX() >= this.xySize) {
         return false;
@@ -105,29 +82,14 @@ public class Board {
       return true;
     }).collect(Collectors.toList());
 
-    System.out.println("After remove out of range values using Streams");
-    System.out.println(validGridPos.toString());
-    System.out.println();
-
-    List<GridPos> validGridPositionsToCheck = new ArrayList<>();
-    for (GridPos gridPos : allGridPositions) {
-      if (gridPos.getX() < 0 || gridPos.getX() >= this.xySize || gridPos.getY() < 0 || gridPos.getY() >= this.xySize) {
-        continue;
-      }
-      validGridPositionsToCheck.add(gridPos);
-    }
-
-    System.out.println("After remove out of range values");
-    System.out.println(validGridPositionsToCheck.toString());
-    System.out.println();
-    return validGridPositionsToCheck;
+    return validGridPos;
   }
 
   private void updateAllSurroundingBomb(int x, int y) {
     // Refactor using GridPos list
     // need to check if its in range of the board
     // need to check that the cell is not a bomb
-    List<GridPos> validGridPositionsToCheck = getAllSafeGridPosAroundGridPos(x, y);
+    List<GridPos> validGridPositionsToCheck = getAllValidGridPosAroundGridPos(x, y);
 
     for (GridPos gridPos : validGridPositionsToCheck) {
       if (checkSpaceForBomb(gridPos.getX(), gridPos.getY())) {
@@ -135,7 +97,6 @@ public class Board {
       }
       this.board[gridPos.getX()][gridPos.getY()] += 1;
     }
-
   }
 
   private void reveal(int x, int y) {
@@ -146,7 +107,7 @@ public class Board {
     if (this.board[x][y] != 0) {
       return;
     }
-    List<GridPos> validGridPositionsToReveal = getAllSafeGridPosAroundGridPos(x, y);
+    List<GridPos> validGridPositionsToReveal = getAllValidGridPosAroundGridPos(x, y);
     for (GridPos gridPos : validGridPositionsToReveal) {
       reveal(gridPos.getX(), gridPos.getY());
     }
@@ -204,13 +165,12 @@ public class Board {
         if (!revealed[x][y]) {
           return false;
         }
-
       }
     }
     return true;
   }
 
-  // Getters
+  // -----Getters-----
   public int getXySize() {
     return this.xySize;
   }

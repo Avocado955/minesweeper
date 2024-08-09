@@ -29,5 +29,4 @@ public class GridPos {
   public String toString() {
     return "GridPos [x=" + this.x + ", y=" + this.y + "]";
   }
-
 }
