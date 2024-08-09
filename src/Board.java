@@ -213,6 +213,21 @@ public class Board {
     }
   }
 
+  public boolean checkWin() {
+    for (int x = 0; x < xySize; x++) {
+      for (int y = 0; y < xySize; y++) {
+        if (checkSpaceForBomb(x, y)) {
+          continue;
+        }
+        if (!revealed[x][y]) {
+          return false;
+        }
+
+      }
+    }
+    return true;
+  }
+
   // Getters
   public int getXySize() {
     return this.xySize;
