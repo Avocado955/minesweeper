@@ -25,4 +25,9 @@ public class GridPos {
     this.y = y;
   }
 
+  @Override
+  public String toString() {
+    return "GridPos [x=" + this.x + ", y=" + this.y + "]";
+  }
+
 }

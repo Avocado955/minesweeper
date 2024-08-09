@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
   // Use a int[][] for the board data
@@ -105,6 +107,34 @@ public class Board {
   }
 
   private void updateAllSurroundingBomb(int x, int y) {
+    // Refactor using GridPos list
+    List<GridPos> validGridPositionsToCheck = new ArrayList<>();
+    int a = 0;
+    int b = -1;
+    for (int z = 0; z < 8; z++) {
+      System.out.printf("X: %d, A: %d, Y: %d, B: %d\n", x, a, y, b);
+      if (z == 1) {
+        b += 1;
+      }
+      if (z == 2) {
+        a = -1;
+        b = -1;
+      }
+      if (z == 5) {
+        a = 1;
+        b = -1;
+      }
+      GridPos newPos = new GridPos(x + a, y + b);
+      validGridPositionsToCheck.add(newPos);
+      b += 1;
+    }
+    System.out.println("All values");
+    System.out.println(validGridPositionsToCheck.toString());
+    System.out.println();
+    // if (x == 0 || x == this.xySize - 1) {
+
+    // }
+
     // need to check that the cell is not a bomb
     // need to check if its in range of the board
 
