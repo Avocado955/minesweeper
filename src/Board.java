@@ -82,7 +82,6 @@ public class Board {
     for (int x = 0; x < xySize; x++) {
       System.out.printf(" %s: ", getBoardLetter(x));
       for (int y = 0; y < xySize; y++) {
-        // System.out.println(getSpaceValue(x, y));
         if (!revealed[x][y]) {
           System.out.printf("[   ]");
         } else {
