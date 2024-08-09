@@ -43,18 +43,19 @@ public class GameLoop {
     }
     gameBoard = new Board(this.xySize);
     boolean createdMines = false;
-    List<Integer> selectedMines = new ArrayList<>();
+    List<String> selectedMines = new ArrayList<>();
     while (!createdMines) {
       int randomXNum = (int) (Math.random() * this.xySize);
       int randomYNum = (int) (Math.random() * this.xySize);
       System.out.printf("X: %d, Y: %d\n", randomXNum, randomYNum);
       // Need a different method of storing the values, as 0, 3 is the same as 1, 0
       // As 0 * 3 = 0, and 1 * 0 = 0
-      if (!selectedMines.contains(randomXNum * randomYNum)) {
-        selectedMines.add(randomXNum * randomYNum);
+      // make a basic class which is a storage for the x, y to be more storable
+      if (!selectedMines.contains("" + randomXNum + "," + randomYNum)) {
+        selectedMines.add("" + randomXNum + "," + randomYNum);
         gameBoard.placeBomb(randomXNum, randomYNum);
       }
-      if (selectedMines.size() == this.xySize) {
+      if (selectedMines.size() >= this.xySize) {
         createdMines = true;
       }
     }
@@ -64,9 +65,19 @@ public class GameLoop {
     while (!hasEnded) {
 
       gameBoard.printBoard();
-      System.out.println("Choose A Space to reveal!");
-      System.out.println("Enter the letter then number (Eg. A4)");
-      String input = player.getPlayerInput();
+      boolean validInput = false;
+      String input = "";
+      while (!validInput) {
+        System.out.println("Choose A Space to reveal!");
+        System.out.println("Enter the letter then number (Eg. A4)");
+        input = player.getPlayerInput();
+        validInput = player.checkValidInput(xySize, input);
+        if (!validInput) {
+          System.out.println();
+          System.out.println("Invalid Input");
+        }
+      }
+
       // Pull apart the input and store the first 2 characters
       int stringCharNum = input.substring(0, 1).toUpperCase().codePointAt(0) - 65;
       int stringNumber = Integer.parseInt(input.substring(1, 2));

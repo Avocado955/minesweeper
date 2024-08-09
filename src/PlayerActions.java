@@ -18,7 +18,7 @@ public class PlayerActions {
   // Should change this to checking if the ints are between the max int
   // Should pull apart the input outside this
   // As need it pulled apart outside
-  private boolean checkValidInput(int xySize, String input) {
+  public boolean checkValidInput(int xySize, String input) {
     // Currently anything higher then 9 as a second parameter will just be cut down
     // to the first digit so A10 will just check A1
     if (input.length() < 2) {
@@ -26,7 +26,7 @@ public class PlayerActions {
     }
     int stringCharNum = input.substring(0, 1).toUpperCase().codePointAt(0);
     int stringNumber = Integer.parseInt(input.substring(1, 2));
-    if (stringCharNum - 65 <= xySize - 1 && stringNumber <= xySize - 1) {
+    if (stringCharNum - 65 <= xySize - 1 && stringCharNum - 65 >= 0 && stringNumber <= xySize - 1) {
       return true;
     }
     return false;
