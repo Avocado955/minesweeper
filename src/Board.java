@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Board {
   // Use a int[][] for the board data
@@ -91,9 +92,22 @@ public class Board {
       allGridPositions.add(newPos);
       b += 1;
     }
-    // System.out.println("All values");
-    // System.out.println(allGridPositions.toString());
-    // System.out.println();
+    System.out.println("All values");
+    System.out.println(allGridPositions.toString());
+    System.out.println();
+    List<GridPos> validGridPos = allGridPositions.stream().filter((pos) -> {
+      if (pos.getX() < 0 || pos.getX() >= this.xySize) {
+        return false;
+      }
+      if (pos.getY() < 0 || pos.getY() >= this.xySize) {
+        return false;
+      }
+      return true;
+    }).collect(Collectors.toList());
+
+    System.out.println("After remove out of range values using Streams");
+    System.out.println(validGridPos.toString());
+    System.out.println();
 
     List<GridPos> validGridPositionsToCheck = new ArrayList<>();
     for (GridPos gridPos : allGridPositions) {
@@ -103,9 +117,9 @@ public class Board {
       validGridPositionsToCheck.add(gridPos);
     }
 
-    // System.out.println("After remove out of range values");
-    // System.out.println(validGridPositionsToCheck.toString());
-    // System.out.println();
+    System.out.println("After remove out of range values");
+    System.out.println(validGridPositionsToCheck.toString());
+    System.out.println();
     return validGridPositionsToCheck;
   }
 
