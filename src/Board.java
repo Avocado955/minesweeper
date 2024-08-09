@@ -108,7 +108,7 @@ public class Board {
 
   private void updateAllSurroundingBomb(int x, int y) {
     // Refactor using GridPos list
-    List<GridPos> validGridPositionsToCheck = new ArrayList<>();
+    List<GridPos> allGridPositions = new ArrayList<>();
     int a = 0;
     int b = -1;
     for (int z = 0; z < 8; z++) {
@@ -125,65 +125,83 @@ public class Board {
         b = -1;
       }
       GridPos newPos = new GridPos(x + a, y + b);
-      validGridPositionsToCheck.add(newPos);
+      allGridPositions.add(newPos);
       b += 1;
     }
     System.out.println("All values");
+    System.out.println(allGridPositions.toString());
+    System.out.println();
+    // Creates an error
+    // Need to either use the iterator method
+    // or make a new list and add them to it
+    List<GridPos> validGridPositionsToCheck = new ArrayList<>();
+    for (GridPos gridPos : allGridPositions) {
+      if (gridPos.getX() < 0 || gridPos.getX() >= this.xySize || gridPos.getY() < 0 || gridPos.getY() >= this.xySize) {
+        continue;
+      }
+      validGridPositionsToCheck.add(gridPos);
+    }
+
+    System.out.println("After remove out of range values");
     System.out.println(validGridPositionsToCheck.toString());
     System.out.println();
-    // if (x == 0 || x == this.xySize - 1) {
 
-    // }
+    for (GridPos gridPos : validGridPositionsToCheck) {
+      if (checkSpaceForBomb(gridPos.getX(), gridPos.getY())) {
+        continue;
+      }
+      this.board[gridPos.getX()][gridPos.getY()] += 1;
+    }
 
     // need to check that the cell is not a bomb
     // need to check if its in range of the board
 
     // For now write an if statement for each, and think about a way to streamline
     // it
-    if (y - 1 >= 0) {
-      if (!checkSpaceForBomb(x, y - 1)) {
-        this.board[x][y - 1] += 1; // Left of Bomb
-      }
-      if (x - 1 >= 0) {
-        if (!checkSpaceForBomb(x - 1, y - 1)) {
-          this.board[x - 1][y - 1] += 1; // Diagonal Left Above of Bomb
-        }
-      }
-      if (x + 1 < this.xySize) {
-        if (!checkSpaceForBomb(x + 1, y - 1)) {
-          this.board[x + 1][y - 1] += 1; // Diagonal Left Below of Bomb
-        }
-      }
-    }
+    // if (y - 1 >= 0) {
+    // if (!checkSpaceForBomb(x, y - 1)) {
+    // this.board[x][y - 1] += 1; // Left of Bomb
+    // }
+    // if (x - 1 >= 0) {
+    // if (!checkSpaceForBomb(x - 1, y - 1)) {
+    // this.board[x - 1][y - 1] += 1; // Diagonal Left Above of Bomb
+    // }
+    // }
+    // if (x + 1 < this.xySize) {
+    // if (!checkSpaceForBomb(x + 1, y - 1)) {
+    // this.board[x + 1][y - 1] += 1; // Diagonal Left Below of Bomb
+    // }
+    // }
+    // }
 
-    if (y + 1 < this.xySize) {
-      if (!checkSpaceForBomb(x, y + 1)) {
-        this.board[x][y + 1] += 1; // Right of Bomb
-      }
-      if (x - 1 >= 0) {
-        if (!checkSpaceForBomb(x - 1, y + 1)) {
-          this.board[x - 1][y + 1] += 1; // Diagonal Right Above of Bomb
-        }
+    // if (y + 1 < this.xySize) {
+    // if (!checkSpaceForBomb(x, y + 1)) {
+    // this.board[x][y + 1] += 1; // Right of Bomb
+    // }
+    // if (x - 1 >= 0) {
+    // if (!checkSpaceForBomb(x - 1, y + 1)) {
+    // this.board[x - 1][y + 1] += 1; // Diagonal Right Above of Bomb
+    // }
 
-      }
-      if (x + 1 < this.xySize) {
-        if (!checkSpaceForBomb(x + 1, y + 1)) {
-          this.board[x + 1][y + 1] += 1; // Diagonal Right Below of Bomb
-        }
-      }
-    }
+    // }
+    // if (x + 1 < this.xySize) {
+    // if (!checkSpaceForBomb(x + 1, y + 1)) {
+    // this.board[x + 1][y + 1] += 1; // Diagonal Right Below of Bomb
+    // }
+    // }
+    // }
 
-    if (x - 1 >= 0) {
-      if (!checkSpaceForBomb(x - 1, y)) {
-        this.board[x - 1][y] += 1; // Above Bomb
-      }
-    }
+    // if (x - 1 >= 0) {
+    // if (!checkSpaceForBomb(x - 1, y)) {
+    // this.board[x - 1][y] += 1; // Above Bomb
+    // }
+    // }
 
-    if (x + 1 < this.xySize) {
-      if (!checkSpaceForBomb(x + 1, y)) {
-        this.board[x + 1][y] += 1; // Below Bomb
-      }
-    }
+    // if (x + 1 < this.xySize) {
+    // if (!checkSpaceForBomb(x + 1, y)) {
+    // this.board[x + 1][y] += 1; // Below Bomb
+    // }
+    // }
 
   }
 
