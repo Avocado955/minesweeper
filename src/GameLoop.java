@@ -23,13 +23,9 @@ public class GameLoop {
     }
   }
 
-  // Setup doesnt need to be its own class as then would need to pass in the Board
-  // and Player from Gameloop
-  // Needs to be a function inside the gameLoop
   public void setUp() {
     hasEnded = false;
     playerWon = false;
-    // Might want this static? depending on how we make this
     // We want setup to handles getting the random spots for the mine
     // And get the players input for the board size
     boolean isValid = false;
@@ -58,9 +54,6 @@ public class GameLoop {
       int randomXNum = (int) (Math.random() * this.xySize);
       int randomYNum = (int) (Math.random() * this.xySize);
 
-      // Need a different method of storing the values, as 0, 3 is the same as 1, 0
-      // As 0 * 3 = 0, and 1 * 0 = 0
-      // make a basic class which is a storage for the x, y to be more storable
       if (!selectedMines.contains("" + randomXNum + "," + randomYNum)) {
         selectedMines.add("" + randomXNum + "," + randomYNum);
         gameBoard.placeBomb(randomXNum, randomYNum);

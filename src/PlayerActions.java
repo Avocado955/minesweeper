@@ -16,9 +16,6 @@ public class PlayerActions {
     return userInput;
   }
 
-  // Should change this to checking if the ints are between the max int
-  // Should pull apart the input outside this
-  // As need it pulled apart outside
   public boolean checkValidInput(int xySize, String input) {
     // Currently anything higher then 9 as a second parameter will just be cut down
     // to the first digit so A10 will just check A1
