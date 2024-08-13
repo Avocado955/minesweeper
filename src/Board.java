@@ -9,7 +9,6 @@ public class Board {
   private boolean[][] revealed; // Using this to check if a board square has been revealed
   private int numOfMines;
 
-  // NOT YET IMPLEMENTED
   // -----Colours-----
   public static final String ANSI_RESET = "\u001B[0m";
   public static final String ANSI_BLACK = "\u001B[30m";
@@ -50,9 +49,17 @@ public class Board {
   private String getSpaceValue(int x, int y) {
     switch (this.board[x][y]) {
       case -1:
-        return "B";
+        return ANSI_BLACK + "B" + ANSI_RESET;
       // case 9:
-      // return "F";
+      // return ANSI_YELLOW + "F" + ANSI_RESET;
+      case 1:
+        return ANSI_BLUE + "1" + ANSI_RESET;
+      case 2:
+        return ANSI_GREEN + "2" + ANSI_RESET;
+      case 3:
+        return ANSI_RED + "3" + ANSI_RESET;
+      case 4:
+        return ANSI_PURPLE + "4" + ANSI_RESET;
       default:
         return "" + this.board[x][y];
     }
