@@ -6,5 +6,6 @@ public class App {
         System.out.println();
         GameLoop gameLoop = new GameLoop();
         gameLoop.loop();
+        gameLoop.closePlayerScanner();
     }
 }

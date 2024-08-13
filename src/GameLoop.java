@@ -127,4 +127,8 @@ public class GameLoop {
     System.out.println();
   }
 
+  public void closePlayerScanner() {
+    player.closeScanner();
+  }
+
 }

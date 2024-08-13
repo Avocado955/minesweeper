@@ -28,4 +28,16 @@ public class PlayerActions {
     }
     return false;
   }
+
+  public void closeScanner() {
+    this.scanner.close();
+  }
+
+  // move the loop for getting the player input in here with the checking
+
+  // make an input interface which has the functions inside
+  // have the input interface coming in through app to the game loop, decoupling
+  // it
+
+  // make a tile class that has the boolean for revealed or not, number and isbomb
 }
